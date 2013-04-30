@@ -1,0 +1,25 @@
+!!! 5
+%head
+  %title FileServer(#{$dir})
+  %link{href: 'http://twitter.github.io/bootstrap/assets/css/bootstrap.css', rel: 'stylesheet'}
+
+%body{style: 'background-color: #8F8F96;'}
+  - if logged?
+    %a{href: '/logout'} Logout
+  - else
+    %a{href: '/login'} Login
+
+  %h1 Files at "#{$dir}"
+
+%table
+  %thead
+    %th File Name
+    %th Last Modified
+    %th Size
+  
+  %tbody
+  - @files.each do |file|
+    %tr
+      %td= file.path
+      %td= file.mtime.strftime("%Y | %B | %d")
+      %td= file.size

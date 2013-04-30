@@ -1,0 +1,17 @@
+!!! 5
+%head
+  %title FileServer(#{$dir})
+  %link{href: 'http://twitter.github.io/bootstrap/assets/css/bootstrap.css', rel: 'stylesheet'}
+
+%body{style: 'background-color: #8F8F96;'}
+  .container-fluid
+    .row
+      .span6.offset3{style: 'border: 1px solid black'}
+        %form{action: '/login', method: 'post'}
+          %fieldset
+            %legend Welcome to your file server at "#{$dir}"
+
+            %label{for: 'password'}
+            %input#password{name: 'password', type: 'password', placeholder: 'Password..'}
+
+            %button.btn.btn-primary{name: 'commit', type: 'submit'} LogIn
