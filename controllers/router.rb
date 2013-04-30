@@ -1,21 +1,29 @@
-class Router
-  def initialize(routes)    
-    @routes = routes
-  end
+require 'ostruct'
 
-  def default
-    [ 404, {'Content-Type' => 'text/plain'}, 'file not found' ]
+class Router
+  attr_reader :routes
+
+  def initialize    
+    yield(@routes = Routes.new)
   end
 
   def call(env)
-    @routes
+    route = @routes.select do |route|
+      env['REQUEST_PATH'] =~ route.pattern &&
+      env['REQUEST_METHOD'] == route.meth
+    end[0]
+    return route.controller.new.call(env, route.action) if route
+    Rack::Response.new('This Is Not The Page You Are Looking For.', 404).finish
+  end
 
-    @routes.each do |route|
-      if env['REQUEST_PATH'].match(route[:pattern])
-        return route[:controller].call(env)
-      end
+  class Routes < Array
+    def draw(method = :get, pattern = %r|/|, controller = ->{}, action = :index)
+      self << OpenStruct.new(
+        pattern: pattern,
+        controller: controller,
+        meth: method.to_s.gsub(/./, &:capitalize),
+        action: action
+      )
     end
-
-    default
   end
 end

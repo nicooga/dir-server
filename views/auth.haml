@@ -5,13 +5,13 @@
 
 %body{style: 'background-color: #8F8F96;'}
   .container-fluid
-    .row
-      .span6.offset3{style: 'border: 1px solid black'}
-        %form{action: '/login', method: 'post'}
+    .row-fluid
+      .hero-unit{style: 'margin: 200px auto; width: 50%;'}
+        %form.form-inline{action: '/login', method: 'post', style: 'margin: 0 auto; width: 50%;'}
           %fieldset
             %legend Welcome to your file server at "#{$dir}"
 
             %label{for: 'password'}
             %input#password{name: 'password', type: 'password', placeholder: 'Password..'}
 
-            %button.btn.btn-primary{name: 'commit', type: 'submit'} LogIn
+            %button.btn.btn-primary.btn-large{name: 'commit', type: 'submit'} LogIn

@@ -3,21 +3,13 @@ require 'haml'
 require 'yaml'
 
 class ControllerBase
-  def call(env)
+  def call(env, meth = :get)
     @env      = env
     @response = Rack::Response.new
     @request  = Rack::Request.new(env)
     @params   = @request.params
     @cookies  = @request.cookies
-
-    # #app is another instance method where all the
-    # stuff to be done happens. This method should 
-    # modify the instance variable @response.
-    app
-
-    # App method will modify the @response variable
-    # #method_missing allows me to call finish on it
-    # just like this:
+    method(meth.downcase.to_sym).call
     finish
   end
 

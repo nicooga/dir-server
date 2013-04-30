@@ -3,8 +3,7 @@ require 'digest'
 
 ### Controllers
 require_relative 'controllers/router'
-require_relative 'controllers/login'
-require_relative 'controllers/logout'
+require_relative 'controllers/authentication'
 require_relative 'controllers/index'
 
 class DirServer < Rack::Server
@@ -17,19 +16,14 @@ class DirServer < Rack::Server
   
   def app
     # Routes
-    Router.new([
-      draw(%r|^/$|, Index.new),
-      draw(%r|^/login$|, Login.new),
-      draw(%r|^/logout$|, Logout.new),
-      draw(%r|^/files.*$|, Index.new),
-      draw(%r|^/favicon\.ico$|, Favicon.new)
-    ])
-  end
+    Router.new do |r|
+      r.draw :get,    %r|^/$|,        Index, :index
+      r.draw :get,    %r|^/files.*$|, Index, :index
 
-  private
-
-  def draw(pattern, controller)
-    { pattern: pattern, controller: controller }
+      r.draw :get,    %r|^/login$|,   Authentication, :new
+      r.draw :post,   %r|^/login$|,   Authentication, :create
+      r.draw :post,   %r|^/logout$|,  Authentication, :delete
+    end
   end
 end
 
